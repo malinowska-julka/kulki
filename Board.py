@@ -9,8 +9,8 @@ class Board:
     board_list = []
     next_balls = []
     next_taken_places = []
-    balls_to_remove = 0
-    grr= 0
+    balls_to_remove = []
+
     def __init__(self,tile_no=7):
         self.tile_no = tile_no
         for y in range(self.tile_no):
@@ -55,12 +55,11 @@ class Board:
             self.remove_ball(self.board_list[old_pos])
             self.board_list[new_pos] = same_ball
 
-            to_remove, c, self.balls_to_remove = self.check_5_in_row(self.board_list[new_pos])
-            possible_places = self.board_list.count(0)
-            if self.grr > 2:
-                self.grr += 1
+            to_remove = self.check_5_in_row(self.board_list[new_pos])
+            #possible_places = self.board_list.count(0)
+
             if to_remove:
-                self.grr = 3
+
                 for i in self.balls_to_remove:
                     self.remove_ball(i)
                 self.balls_to_remove = []
@@ -108,15 +107,15 @@ class Board:
         return places, directions
 
 
-    def check_5_in_row(self, ball, counter=0, check_dir=[], all_balls=[]):
+    def check_5_in_row(self, ball, check_dir=[]):
 
-        counter += 1
-        all_balls.append(ball)
 
-        #possible_pairs = [[0, 7],
-        #                  [3, 4],
-        #                  [2, 5],
-        #                  [1, 6]]
+        self.balls_to_remove.append(ball)
+
+        possible_pairs = [[0, 7],
+                         [3, 4],
+                         [2, 5],
+                         [1, 6]]
 
         # check if the same color around
         if not check_dir:
@@ -126,24 +125,25 @@ class Board:
 
 
         if not directions or not places or self.board_list[places[0]] == 0:
-            return False, counter, []
+            return False
 
-        #elif len(directions) > 1:
-        #    for list in possible_pairs:
-        #        if all(item in directions for item in list):
-        #            #dwie kulki
-        #            for i in range(len(list)):
-        #                b = list[i]
-                        #self.check_5_in_row(self.board_list[places[list[i]]], counter, list[i],all_balls)
+        elif len(directions) > 1:
+            for list in possible_pairs:
+                if all(item in directions for item in list):
+                    #dwie kulki
+                    for i in range(len(list)):
+                        f = self.balls_to_remove
+                        b = list[i]
+                        self.check_5_in_row(self.board_list[places[list[i]]], [list[i]])
         elif len(directions) == 1:
-            self.check_5_in_row(self.board_list[places[0]], counter, directions, all_balls)
+            self.check_5_in_row(self.board_list[places[0]], directions)
 
-        if len(all_balls) >= 5:
-            return True, counter, all_balls
+        if len(self.balls_to_remove) >= 3:
+            return True
 
         else:
-            all_balls.clear()
-            return False, counter, []
+            self.balls_to_remove = []
+            return False
 
 
 
