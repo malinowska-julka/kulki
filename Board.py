@@ -12,7 +12,7 @@ class Board:
     next_taken_places = []
     balls_to_remove = []
 
-    def __init__(self,tile_no=7):
+    def __init__(self, tile_no=7):
         self.tile_no = tile_no
 
         self.board = [[0 for _ in range(tile_no)] for _ in range(tile_no)]
@@ -22,9 +22,9 @@ class Board:
         self.generate_balls(NO_NEXT_BALLS)
 
     def board_update(self):
-        for y in range(self.tile_no):
-            for x in range(self.tile_no):
-                screen.blit(self.board_image[y][x], (y*TILE_SIZE, x*TILE_SIZE))
+        for x in range(self.tile_no):
+            for y in range(self.tile_no):
+                screen.blit(self.board_image[x][y], (y*TILE_SIZE, x*TILE_SIZE))
 
     def generate_balls(self,how_many):
 
@@ -35,7 +35,7 @@ class Board:
             #self.next_taken_places.append(new_place)
             self.next_balls.append(ball)
             self.board[row][col] = ball.color
-            print(str(self.board[row][col]) + 'r: ' + str(ball.row) + ' col: ' + str(ball.column))
+            print(str(self.board[row][col]) + ' r: ' + str(ball.row) + ' col: ' + str(ball.column))
             self.board_image[row][col] = ball.image
 
             '''to_remove = self.check_5_in_row(ball)
@@ -60,9 +60,8 @@ class Board:
             self.board_image[row_new][col_new] = self.board_image[row_old][col_old]
             #same_ball = Ball(self.board[row_old][col_old].color, position_new[0], position_new[1],row_new,col_new)
 
-            self.remove_ball(row_old, col_old)
             self.board[row_new][col_new] = self.board[row_old][col_old] #same_ball.color
-
+            self.remove_ball(row_old, col_old)
             #self.check_5_in_row(self.board_list[new_pos])
 
             '''
@@ -78,6 +77,8 @@ class Board:
 
             self.balls_to_remove = []
             self.board_update()
+
+
 
     def remove_ball(self,row,column):
         r = row
@@ -169,16 +170,20 @@ class Board:
 
     def scan_board(self):
         isEmpty = True
+        isFull = True
+
         for y in range(self.tile_no):
             for x in range(self.tile_no):
                 # look for pattern 5 in row
-                if self.board[y][x] != 0:
+                if self.board[x][y] != 0:
                     isEmpty = False
+                if self.board[x][y] == 0:
+                    isFull = False
 
-        return isEmpty
+        return isEmpty, isFull
 
     # ogarnac county chyba lepiej zrobiccountery i sprawdzacczy 5+ i potemto do counta glowenego dac
     # zmienic gdzie dodawac kulki do balls_to_renmove
     # List[List[Optional[Ball]]] = [
 #             [0 for _ in range(size)] for _ in range(size)
-#         ]
+#         ]  print("row_new: " + str(row_new) + ", col_new: " + str(col_new))

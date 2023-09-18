@@ -36,8 +36,9 @@ while True:
     board.board_update()
     pygame.display.flip()
 
-    '''isEmpty = board.scan_board
+    '''isEmpty, isFull = board.scan_board
     if isEmpty:
+        display_text('THE END!!!', font, display_surface)
         time.sleep(2)
         sys.exit()'''
 
@@ -48,17 +49,23 @@ while True:
             mouse_click = 0
             positions = []
 
+        isEmpty, isFull = board.scan_board()
+        if isFull:
+            display_text('THE END!!!', font, display_surface)
+            time.sleep(2)
+            sys.exit()
+
 
     if mouse_click == 2:
         one_turn(positions)
 
-        '''possible_places = board.count(0)
+        #possible_places = board.count(0)
 
-        if possible_places > 0:
-            if possible_places > 15:
-                board.generate_balls(14)
-            else:
-                board.generate_balls(possible_places)'''
+        #if possible_places > 0:
+         #   if possible_places > 15:
+          #      board.generate_balls(14)
+           # else:
+        board.generate_balls(NO_NEXT_BALLS)
 
         mouse_click = 0
         positions = []

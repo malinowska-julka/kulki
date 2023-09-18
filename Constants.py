@@ -2,9 +2,10 @@ import pygame
 TILE_SIZE = 120
 BALL_SIZE = 120
 BOARD_7X7 = TILE_SIZE*7
-NO_NEXT_BALLS = 3
+NO_NEXT_BALLS = 7
 size = width, height = BOARD_7X7, BOARD_7X7
 screen = pygame.display.set_mode(size)
+
 
 
 warning_red = (92,13,13)
