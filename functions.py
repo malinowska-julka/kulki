@@ -4,7 +4,7 @@ import random
 from Constants import *
 
 def random_color():
-    c = color_dict[random.randint(1, 5)]
+    c = random.randint(1, 5)
     return c
 
 def get_place_from_mouse(mouse_pos):

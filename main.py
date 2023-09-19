@@ -4,7 +4,7 @@ from Board import *
 import time
 
 
-def one_turn(position):
+def one_turn(position, turn):
     row_old, col_old = get_place_from_mouse(position[0])
     if board.check_if_empty(row_old, col_old):
         display_text('IT IS AN EMPTY FIELD!', font, display_surface)
@@ -14,7 +14,7 @@ def one_turn(position):
         display_text('IT IS A TAKEN FIELD!', font, display_surface)
         return -1
     else:
-        board.move_ball(row_old, col_old, row_new, col_new, position[1])
+        board.move_ball(row_old, col_old, row_new, col_new, position[1],turn)
 
 
 pygame.init()
@@ -24,6 +24,7 @@ display_surface = pygame.display.set_mode((width, height))
 board = Board()
 mouse_click = 0
 positions = []
+turn = 0
 while True:
 
     for event in pygame.event.get():
@@ -51,7 +52,8 @@ while True:
             positions = []
 
     if mouse_click == 2:
-        one_turn(positions)
+        turn += 1
+        one_turn(positions, turn)
 
         free_places = board.scan_board()
         if len(free_places) >= NO_NEXT_BALLS:

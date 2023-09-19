@@ -1,15 +1,15 @@
 from functions import random_color
 from Constants import *
+import random
 import copy
 import numpy as np
 
 #TODO: TAKEN FIELD - nie generuj nowych kulek
 #TODO: skanuj caly kwadrat z kulką w środku / a może caly board z danym kolorem?
-#TODO: find pattern in square - row, column, cross left / cross right
+#TODO: find pattern in square - row, column, cross left / cross right - skanuj całą tablicę po kolei, szukając patternu w kolorach
 #TODO: extend square to search - check outer ball in square
 
 
-from Ball import *
 class Board:
     width = BOARD_7X7
     tile_no = None
@@ -38,12 +38,12 @@ class Board:
         for i in range(how_many):
 
             place = random.choice(self.scan_board())
-            ball = Ball(random_color(), place[0], place[1])
+            color = random_color()
 
-            #self.next_taken_places.append(new_place)
-            self.next_balls.append(ball)
-            self.board[place[0]][place[1]] = ball
-            self.board_image[place[0]][place[1]] = ball.image
+            self.board[place[0]][place[1]] = color
+
+            image = pygame.image.load("images/" + color_dict[color] + ".png")
+            self.board_image[place[0]][place[1]] = image
 
             '''to_remove = self.check_5_in_row(ball)
             if to_remove and len(self.balls_to_remove) >= 5:
@@ -59,12 +59,19 @@ class Board:
         if self.board[row][column] == 0: return True
         else: return False
 
-    def move_ball(self, row_old, col_old, row_new, col_new, position_new):
+    def move_ball(self, row_old, col_old, row_new, col_new, position_new, turn):
 
         self.board_image[row_new][col_new] = self.board_image[row_old][col_old]
-        self.board[row_new][col_new] = self.board[row_old][col_old] #same_ball.color
+        self.board[row_new][col_new] = self.board[row_old][col_old]
         self.remove_ball(row_old, col_old)
+
         #self.check_5_in_row(self.board_list[new_pos])
+        if turn > 1:
+            p = self.board[row_old][col_old]
+            r = self.board[row_new][col_new]
+            print('d')
+
+        #self.one_color_board(self.board[row_new][col_new])
 
         '''
             if to_remove:
@@ -80,14 +87,25 @@ class Board:
         self.balls_to_remove = []
         self.board_update()
 
-    def remove_ball(self,row,column):
+    def remove_ball(self, row, column):
         r = row
         c = column
         self.board_image[r][c] = pygame.image.load("images/tile.png")
         self.board[r][c] = 0
 
-    def search_around(self, row, col):
 
+    # def search_around(self, row, col): koncept kwadratów
+
+    def one_color_board(self, color): # bez sensu - skanuj całą tablicę po kolei, szukając patternu w kolorach
+        color_board = self.board.copy()
+        for x in range(self.tile_no):
+            for y in range(self.tile_no):
+                if color_board[x][y] != 0:
+                    if color_board[x][y].color == color:
+                        color_board[x][y] = 1
+                    else:
+                        color_board[x][y] = 0
+            print(color_board[x][:])
 
     def get_one_direction_place(self, ball, direction):
         places = [ball.place - self.tile_no - 1, ball.place - self.tile_no,
