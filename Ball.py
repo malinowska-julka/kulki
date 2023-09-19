@@ -3,13 +3,10 @@ class Ball:
     color = None
     ballrect = None
     image = None
-    pos_x = None
-    pos_y = None
     row = None
     column = None
-    def __init__(self, color, pos_x,pos_y, row,col):
+    def __init__(self, color, row,col):
         self.color = color
-        self.pos_x, self.pos_y = pos_x,pos_y
         self.image = pygame.image.load("images/" + self.color + ".png")
         self.ballrect = self.image.get_rect()
         self.row = row

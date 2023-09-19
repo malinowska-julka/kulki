@@ -3,19 +3,6 @@ import random
 #from main import *
 from Constants import *
 
-
-def initial_random_place(board_size, balls_mash, next_balls):
-    isFree = False
-    while isFree == False:
-        place = random.randint(0,pow(board_size,2)-1)
-        row = random.randint(0,board_size-1)
-        column = random.randint(0,board_size-1)
-
-        if balls_mash[row][column] == 0:
-            coor_x = BALL_SIZE * (place % board_size)
-            coor_y = BALL_SIZE * (place//board_size)
-            return coor_x, coor_y, row, column
-
 def random_color():
     c = color_dict[random.randint(1, 5)]
     return c
