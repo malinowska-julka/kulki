@@ -4,10 +4,10 @@ import random
 import copy
 import numpy as np
 
-#TODO: TAKEN FIELD - nie generuj nowych kulek
-#TODO: skanuj caly kwadrat z kulką w środku / a może caly board z danym kolorem?
-#TODO: find pattern in square - row, column, cross left / cross right - skanuj całą tablicę po kolei, szukając patternu w kolorach
-#TODO: extend square to search - check outer ball in square
+# TODO: skanuj caly kwadrat z kulką w środku / a może caly board z danym kolorem?
+# TODO: find pattern in square - row, column, cross left / cross right - skanuj całą tablicę po kolei,
+#      szukając patternu w kolorach
+# TODO: extend square to search - check outer ball in square
 
 
 class Board:
@@ -25,18 +25,16 @@ class Board:
         self.board = [[0 for _ in range(tile_no)] for _ in range(tile_no)]
         image = pygame.image.load("images/tile.png")
         self.board_image = [[image for _ in range(tile_no)] for _ in range(tile_no)]
-        #initial balls
+        # initial balls
         self.generate_balls(NO_NEXT_BALLS)
 
     def board_update(self):
         for x in range(self.tile_no):
             for y in range(self.tile_no):
-                screen.blit(self.board_image[x][y], (y*TILE_SIZE, x*TILE_SIZE))
+                screen.blit(self.board_image[x][y], (y * TILE_SIZE, x * TILE_SIZE))
 
     def generate_balls(self, how_many):
-
         for i in range(how_many):
-
             place = random.choice(self.scan_board())
             color = random_color()
 
@@ -45,7 +43,7 @@ class Board:
             image = pygame.image.load("images/" + color_dict[color] + ".png")
             self.board_image[place[0]][place[1]] = image
 
-            '''to_remove = self.check_5_in_row(ball)
+            """to_remove = self.check_5_in_row(ball)
             if to_remove and len(self.balls_to_remove) >= 5:
                 for i in self.balls_to_remove:
                     print(i.color, i.place)
@@ -53,27 +51,28 @@ class Board:
                 for i in self.balls_to_remove:
                     self.remove_ball(i)
 
-            self.balls_to_remove = []'''
+            self.balls_to_remove = []"""
 
     def check_if_empty(self, row, column):
-        if self.board[row][column] == 0: return True
-        else: return False
+        if self.board[row][column] == 0:
+            return True
+        else:
+            return False
 
     def move_ball(self, row_old, col_old, row_new, col_new, position_new, turn):
-
         self.board_image[row_new][col_new] = self.board_image[row_old][col_old]
         self.board[row_new][col_new] = self.board[row_old][col_old]
         self.remove_ball(row_old, col_old)
 
-        #self.check_5_in_row(self.board_list[new_pos])
+        # self.check_5_in_row(self.board_list[new_pos])
         if turn > 1:
             p = self.board[row_old][col_old]
             r = self.board[row_new][col_new]
-            print('d')
+            print("d")
 
-        #self.one_color_board(self.board[row_new][col_new])
+        # self.one_color_board(self.board[row_new][col_new])
 
-        '''
+        """
             if to_remove:
                 print("no balls to maybe remove")
                 print(str(len(self.balls_to_remove)))
@@ -82,7 +81,7 @@ class Board:
                     print(i.color, i.place)
                 print('/n')
                 for i in self.balls_to_remove:
-                    self.remove_ball(i)'''
+                    self.remove_ball(i)"""
 
         self.balls_to_remove = []
         self.board_update()
@@ -93,10 +92,11 @@ class Board:
         self.board_image[r][c] = pygame.image.load("images/tile.png")
         self.board[r][c] = 0
 
-
     # def search_around(self, row, col): koncept kwadratów
 
-    def one_color_board(self, color): # bez sensu - skanuj całą tablicę po kolei, szukając patternu w kolorach
+    def one_color_board(
+        self, color
+    ):  # bez sensu - skanuj całą tablicę po kolei, szukając patternu w kolorach
         color_board = self.board.copy()
         for x in range(self.tile_no):
             for y in range(self.tile_no):
@@ -108,17 +108,24 @@ class Board:
             print(color_board[x][:])
 
     def get_one_direction_place(self, ball, direction):
-        places = [ball.place - self.tile_no - 1, ball.place - self.tile_no,
-                  ball.place - self.tile_no + 1, ball.place - 1,
-                  ball.place + 1, ball.place + self.tile_no - 1,
-                  ball.place + self.tile_no, ball.place + self.tile_no + 1]
+        places = [
+            ball.place - self.tile_no - 1,
+            ball.place - self.tile_no,
+            ball.place - self.tile_no + 1,
+            ball.place - 1,
+            ball.place + 1,
+            ball.place + self.tile_no - 1,
+            ball.place + self.tile_no,
+            ball.place + self.tile_no + 1,
+        ]
 
         if places[direction[0]] in range(0, 48):
             return [places[direction[0]]]
 
-        else: return []
+        else:
+            return []
 
-    '''def same_color_around(self, ball, one_direction = None):
+    """def same_color_around(self, ball, one_direction = None):
         if not one_direction:
             places, directions = get_places_around(ball.pos_x, ball.pos_y)
 
@@ -138,19 +145,15 @@ class Board:
             print("next_checking:")
             for i in places:
                 print(i)
-        return places, directions'''
+        return places, directions"""
 
-
-    def check_5_in_row(self, ball, check_dir=[], balls_in_rows = []):
+    def check_5_in_row(self, ball, check_dir=[], balls_in_rows=[]):
         print("checking ball: " + ball.color + " " + str(ball.place))
 
         balls_in_rows.append(ball)
 
-        #self.balls_to_remove.append(ball)
-        possible_pairs = [[0, 7],
-                         [3, 4],
-                         [2, 5],
-                         [1, 6]]
+        # self.balls_to_remove.append(ball)
+        possible_pairs = [[0, 7], [3, 4], [2, 5], [1, 6]]
 
         # check if the same color around
         if not check_dir:
@@ -164,7 +167,7 @@ class Board:
         if not directions or not places or self.board_list[places[0]] == 0:
             return
 
-        '''elif len(directions) > 1:
+        """elif len(directions) > 1:
             for list in possible_pairs:
                 if all(item in directions for item in list):
                     counter = 0
@@ -186,21 +189,72 @@ class Board:
             c = self.check_5_in_row(self.board_list[places[0]], directions)
             count += c
 
-        return count'''
+        return count"""
+
+    def pattern_search(self, place_list):
+        to_remove = []
+        # the same y check if x in order
+        for y in range(self.tile_no):
+            xs = []
+            for place in place_list:
+                if place[1] == y:
+                    xs.append(place[0])
+            # sort to assure but not necessary I guess
+            # shifted =
+
+        """
+        def call(x):
+            k = pd.DataFrame({'x':x}) 
+            k["s"] = k["x"].shift(1)
+            k["s"][0] = 0
+            k = k.astype(int)
+            k["r"] = k["x"] - k["s"]
+            
+            get indexes of r == 1 (find func???)
+            if len(indexes) > 2:
+                lists_of_x = []
+                curr_list = []
+                
+                for i in range(1, len(indexes)):
+                    if  indexes[i] - indexes[i-1] == 1:
+                        curr_list.append(x[i], s[i])
+                    else:
+                        curr_list.drop_duplicates(keep = first)
+                        lists_of_x.append(curr_list)
+                        curr_list = []
+                
+                for list in lists_of_x:
+                    if len(list) < NO_TO_REMOVE
+                        lists_of_x.pop(list)
+                    else:
+                        ys = np.zeros(len = len(list), value = y) <- for normal list
+                        places = zip(list,ys) <- list of tuples
+                        self.score_and_remove(places)
+                        
+        """
+
+        # the same x check if y in order
+        # skosy
+        return to_remove
+
+    def score_and_remove(self, places):
+        balls = len(places)
+        # scoring formula -> total_score += score
+        for place in places:
+            self.remove_ball(place[0], place[1])
 
     def scan_board(self):
-        free_places = []
+        for color in color_dict:
+            free_places = []
+            color_places = []
+            for y in range(self.tile_no):
+                for x in range(self.tile_no):
+                    # look for pattern 5 in row
+                    if self.board[x][y] == color:
+                        color_places.append([x, y])
 
-        for y in range(self.tile_no):
-            for x in range(self.tile_no):
-                # look for pattern 5 in row
-                if self.board[x][y] == 0:
-                    free_places.append([x, y])
-
+                    # self.board_update()
+                    if self.board[x][y] == 0:
+                        free_places.append([x, y])
+            # self.pattern_search(color_places)
         return free_places
-
-    # ogarnac county chyba lepiej zrobiccountery i sprawdzacczy 5+ i potemto do counta glowenego dac
-    # zmienic gdzie dodawac kulki do balls_to_renmove
-    # List[List[Optional[Ball]]] = [
-#             [0 for _ in range(size)] for _ in range(size)
-#         ]  print("row_new: " + str(row_new) + ", col_new: " + str(col_new))
