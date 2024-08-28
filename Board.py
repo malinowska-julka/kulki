@@ -1,5 +1,6 @@
-from functions import random_color
+from functions import *
 from Constants import *
+from AStarCell import *
 import random
 import copy
 import numpy as np
@@ -13,7 +14,7 @@ class Board:
     next_balls = []
     next_taken_places = []
 
-    def __init__(self, tile_no=7):
+    def __init__(self, tile_no=TILE_NO):
         self.tile_no = tile_no
 
         self.board = [[-1 for _ in range(tile_no)] for _ in range(tile_no)]
@@ -43,6 +44,7 @@ class Board:
                 self.score_and_remove(line)
 
     def check_if_empty(self, row, column):
+
         if self.board[row][column] == -1:
             return True
         else:
@@ -64,24 +66,6 @@ class Board:
         c = column
         self.board_image[r][c] = pygame.image.load("images/tile.png")
         self.board[r][c] = -1
-
-    def get_one_direction_place(self, ball, direction):
-        places = [
-            ball.place - self.tile_no - 1,
-            ball.place - self.tile_no,
-            ball.place - self.tile_no + 1,
-            ball.place - 1,
-            ball.place + 1,
-            ball.place + self.tile_no - 1,
-            ball.place + self.tile_no,
-            ball.place + self.tile_no + 1,
-        ]
-
-        if places[direction[0]] in range(0, 48):
-            return [places[direction[0]]]
-
-        else:
-            return []
 
     def get_lines(self, coor_y, coor_x):
         ball_color = self.board[coor_y][coor_x]
@@ -180,5 +164,57 @@ class Board:
             # self.pattern_search(color_places)
         return free_places
 
-    def path_check(self):
-        pass
+    def path_check(self, src, dest):
+        source = Cell(src[0], src[1])
+        open = [source]
+        closed = []
+        path_found = False
+
+        while open:
+            q = find_min_f(open)
+            open.remove(q)
+            succ = []
+            directions = [
+                (0, 1),
+                (0, -1),
+                (1, 0),
+                (-1, 0),
+            ]
+            for dir in directions:
+
+                new_r = q.row + dir[0]
+                new_c = q.col + dir[1]
+
+                if is_valid(new_r, new_c) and self.check_if_empty(new_r, new_c):
+                    new_s = Cell(new_r, new_c)
+                    new_s.assign_parent(q.row, q.col)
+                    succ.append(new_s)
+
+            for s in succ:
+
+                if (s.row == dest[0]) and (s.col == dest[1]):
+                    path_found = True
+                    return path_found
+
+                else:
+                    s.g = q.g + 1.0
+                    s.h = calculate_distance(s.row, s.col, dest[0], dest[1])
+                    s.f = s.g + s.h
+                find = False
+                for c in open:
+                    if (c.row == s.row) and (c.col == s.col) and (c.f < s.f):
+                        find = True
+                        break
+                if not find:
+                    all_good = True
+                    for c in closed:
+                        if (c.row == s.row) and (c.col == s.col) and (c.f < s.f):
+                            all_good = False
+                            break
+
+                    if all_good:
+                        open.append(s)
+
+            closed.append(q)
+
+        return path_found

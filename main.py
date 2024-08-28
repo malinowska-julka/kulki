@@ -14,13 +14,17 @@ def one_turn(position, turn):
         display_text("IT IS A TAKEN FIELD!", font, display_surface)
         return -1
     else:
-        board.move_ball(row_old, col_old, row_new, col_new, position[1], turn)
+        if board.path_check([row_old, col_old], [row_new, col_new]):
+            board.move_ball(row_old, col_old, row_new, col_new, position[1], turn)
 
-        free_places = board.scan_board()
-        if len(free_places) >= NO_NEXT_BALLS:
-            board.generate_balls(NO_NEXT_BALLS)
+            free_places = board.scan_board()
+            if len(free_places) >= NO_NEXT_BALLS:
+                board.generate_balls(NO_NEXT_BALLS)
+            else:
+                board.generate_balls(len(free_places))
         else:
-            board.generate_balls(len(free_places))
+            display_text("PATH NOT FOUND", font, display_surface)
+            return -1
 
 
 if __name__ == "__main__":
