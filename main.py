@@ -1,38 +1,36 @@
 import sys, pygame, random, time
 from functions import *
 from Board import *
+from SideMenu import *
 import time
 
 
 def one_turn(position, turn):
     row_old, col_old = get_place_from_mouse(position[0])
-    if board.check_if_empty(row_old, col_old):
-        display_text("IT IS AN EMPTY FIELD!", font, display_surface)
-        return -1
     row_new, col_new = get_place_from_mouse(position[1])
-    if not board.check_if_empty(row_new, col_new):
-        display_text("IT IS A TAKEN FIELD!", font, display_surface)
-        return -1
-    else:
-        if board.path_check([row_old, col_old], [row_new, col_new]):
-            board.move_ball(row_old, col_old, row_new, col_new, position[1], turn)
 
-            free_places = board.scan_board()
-            if len(free_places) >= NO_NEXT_BALLS:
-                board.generate_balls(NO_NEXT_BALLS)
-            else:
-                board.generate_balls(len(free_places))
+    if board.path_check([row_old, col_old], [row_new, col_new]):
+        board.move_ball(row_old, col_old, row_new, col_new, position[1], turn)
+
+        free_places = board.scan_board()
+        if len(free_places) >= NO_NEXT_BALLS:
+            board.generate_balls(NO_NEXT_BALLS)
         else:
-            display_text("PATH NOT FOUND", font, display_surface)
-            return -1
+            board.generate_balls(len(free_places))
+    else:
+        display_text("PATH NOT FOUND", font, display_surface)
+        return -1
 
 
 if __name__ == "__main__":
     pygame.init()
     font = pygame.font.Font("Museo_Slab_500_2.otf", 32)
     display_surface = pygame.display.set_mode((width, height))
+    color = (255, 255, 255)
+    display_surface.fill(color)
 
     board = Board()
+    menu = SideMenu()
     mouse_click = 0
     positions = []
     turn = 0
@@ -51,6 +49,7 @@ if __name__ == "__main__":
                     mouse_click += 1
 
         board.board_update()
+        menu.menu_update()
         pygame.display.flip()
 
         if mouse_click == 1:
@@ -61,10 +60,15 @@ if __name__ == "__main__":
                 positions = []
 
         if mouse_click == 2:
-            turn += 1
-            one_turn(positions, turn)
-
-            mouse_click = 0
-            positions = []
+            row_n, col_n = get_place_from_mouse(positions[1])
+            if not board.check_if_empty(row_n, col_n):
+                positions[0] = positions[1]
+                positions.pop()
+                mouse_click -= 1
+            else:
+                turn += 1
+                one_turn(positions, turn)
+                mouse_click = 0
+                positions = []
 
         pygame.event.pump()

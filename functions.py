@@ -12,7 +12,7 @@ def random_color():
 
 def get_place_from_mouse(mouse_pos):
 
-    row = mouse_pos[1] // TILE_SIZE
+    row = (mouse_pos[1] - SIDE_MENU_HEIGHT) // TILE_SIZE
     column = mouse_pos[0] // TILE_SIZE
 
     return row, column
@@ -69,4 +69,8 @@ def calculate_distance(r1, c1, r2, c2):
     return abs(r1 - r2) + abs(c1 - c2)
 
 
-# todo co jak nie ma miejsca
+# TODO co jak nie ma miejsca
+# TODO scoring method
+# TODO side menu z wynikiem
+# TODO menu?
+# TODO zrobic cos z komunikatami

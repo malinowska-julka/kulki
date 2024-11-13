@@ -1,12 +1,14 @@
 import pygame
 
+SIDE_MENU_HEIGHT = 70
+NEXT_BALL_SIZE = 50
 TILE_SIZE = 120
 BALL_SIZE = 120
 BOARD_7X7 = TILE_SIZE * 7
 NO_NEXT_BALLS = 3
 NO_TO_REMOVE = 5
 TILE_NO = 7
-size = width, height = BOARD_7X7, BOARD_7X7
+size = width, height = BOARD_7X7, BOARD_7X7 + SIDE_MENU_HEIGHT
 screen = pygame.display.set_mode(size)
 
 

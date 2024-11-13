@@ -13,6 +13,7 @@ class Board:
     board_image = []
     next_balls = []
     next_taken_places = []
+    board_coors_up = (0, SIDE_MENU_HEIGHT)
 
     def __init__(self, tile_no=TILE_NO):
         self.tile_no = tile_no
@@ -27,7 +28,10 @@ class Board:
 
         for x in range(self.tile_no):
             for y in range(self.tile_no):
-                screen.blit(self.board_image[x][y], (y * TILE_SIZE, x * TILE_SIZE))
+                screen.blit(
+                    self.board_image[x][y],
+                    (y * TILE_SIZE, x * TILE_SIZE + SIDE_MENU_HEIGHT),
+                )
 
     def generate_balls(self, how_many):
         for i in range(how_many):
