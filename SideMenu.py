@@ -9,7 +9,7 @@ class SideMenu:
     font = None
 
     def __init__(self):
-        self.next_balls = [1, 2, 3]
+        # self.next_balls = [1, 2, 3]
         self.font = pygame.font.Font("Museo_Slab_500_2.otf", 42)
         self.score = 0
 

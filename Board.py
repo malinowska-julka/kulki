@@ -23,6 +23,7 @@ class Board:
         self.board_image = [[image for _ in range(tile_no)] for _ in range(tile_no)]
         # initial balls
         self.generate_balls(NO_NEXT_BALLS)
+        self.add_balls()
 
     def board_update(self):
 
@@ -35,17 +36,37 @@ class Board:
 
     def generate_balls(self, how_many):
         for i in range(how_many):
-            place = random.choice(self.scan_board())
-            color = random_color()
+            self.next_taken_places.append(
+                random.choice(
+                    [
+                        val
+                        for val in self.scan_board()
+                        if val not in self.next_taken_places
+                    ]
+                )
+            )
+            self.next_balls.append(random_color())
 
-            self.board[place[0]][place[1]] = color
+    def add_balls(self):
+        for i in range(len(self.next_balls)):
+            self.board[self.next_taken_places[i][0]][self.next_taken_places[i][1]] = (
+                self.next_balls[i]
+            )
 
-            image = pygame.image.load("images/" + color_dict[color] + ".png")
-            self.board_image[place[0]][place[1]] = image
+            image = pygame.image.load(
+                "images/" + color_dict[self.next_balls[i]] + ".png"
+            )
+            self.board_image[self.next_taken_places[i][0]][
+                self.next_taken_places[i][1]
+            ] = image
 
-            to_remove = self.get_lines(place[0], place[1])
+            to_remove = self.get_lines(
+                self.next_taken_places[i][0], self.next_taken_places[i][1]
+            )
             for line in to_remove:
                 self.score_and_remove(line)
+        self.next_taken_places = []
+        self.next_balls = []
 
     def check_if_empty(self, row, column):
 
@@ -63,6 +84,7 @@ class Board:
 
         for line in to_remove:
             self.score_and_remove(line)
+
         self.board_update()
 
     def remove_ball(self, row, column):

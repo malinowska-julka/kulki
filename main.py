@@ -8,15 +8,19 @@ import time
 def one_turn(position, turn):
     row_old, col_old = get_place_from_mouse(position[0])
     row_new, col_new = get_place_from_mouse(position[1])
-
     if board.path_check([row_old, col_old], [row_new, col_new]):
         board.move_ball(row_old, col_old, row_new, col_new, position[1], turn)
-
+        board.add_balls()
+        board.next_taken_places = []
+        board.next_balls = []
         free_places = board.scan_board()
         if len(free_places) >= NO_NEXT_BALLS:
             board.generate_balls(NO_NEXT_BALLS)
+
         else:
             board.generate_balls(len(free_places))
+        menu.next_balls = board.next_balls
+
     else:
         display_text("PATH NOT FOUND", font, display_surface)
         return -1
@@ -31,6 +35,8 @@ if __name__ == "__main__":
 
     board = Board()
     menu = SideMenu()
+    board.generate_balls(NO_NEXT_BALLS)
+    menu.next_balls = board.next_balls
     mouse_click = 0
     positions = []
     turn = 0
@@ -51,7 +57,6 @@ if __name__ == "__main__":
         board.board_update()
         menu.menu_update()
         pygame.display.flip()
-
         if mouse_click == 1:
             row, col = get_place_from_mouse(positions[0])
             if board.check_if_empty(row, col):
